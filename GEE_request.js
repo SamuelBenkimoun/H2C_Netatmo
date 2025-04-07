@@ -1,5 +1,4 @@
-//GEE SCRIPT TO EXTRACT NDVI VALUES FROM MODIS IMAGERY AT 250M, FOR A SAMPLE REGION IN PARIS
-// Setting the boundaries of the region of interest (rectangle)
+// Setting the boundaries of the region of interest
 var polygon = ee.Geometry.Polygon(
   [[
     [2.328717645633982, 48.81328561163421],  
@@ -11,7 +10,7 @@ var polygon = ee.Geometry.Polygon(
 );
 // Select the image from the collection and filter it by date
 var dataset = ee.ImageCollection('MODIS/061/MOD13Q1')
-                  .filter(ee.Filter.date('2022-05-31', '2024-10-01'));
+                  .filter(ee.Filter.date('2022-05-15', '2024-10-01'));
 // Select the NDVI band
 var ndvi = dataset.select('NDVI');
 // Clip the NDVI image to the polygon boundaries
@@ -41,7 +40,7 @@ clippedNdvi.evaluate(function(images) {
       image: img,  
       description: 'Clipped_NDVI_Paris_13_'+ imageDate,  // name of the output file
       folder: 'GEE_Exports',  // folder on Google Drive
-      fileNamePrefix: 'clipped_ndvi_',  
+      fileNamePrefix: 'clipped_ndvi_'+ imageDate,  
       region: polygon,  // region for clipping (optionnal here ?)
       scale: 250,  // resolution in meters
       crs: 'EPSG:4326',  
