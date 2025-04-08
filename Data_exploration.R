@@ -4,7 +4,7 @@ library(ggplot2)
 library(leaflet)
 library(lubridate)
 
-# Loading the files
+# Loading the files -
 ##netatmo22 <- open_dataset("./H2C/Data/Netatmo_ini/JJA22.parquet") #To avoid loading the whole file
 netatmo22 <- read_parquet("./H2C/Data/Netatmo_ini/JJA22.parquet")
 netatmo23 <- read_parquet("./H2C/Data/Netatmo_ini/JJA23.parquet")
