@@ -136,6 +136,7 @@ ctg_build <- catalog_apply(ctg_norm, filter_class_build)
 ctg_water <- catalog_apply(ctg_norm, filter_class_water)
 
 
+# FILTERING BY HEIGHT ?
 
 
 
