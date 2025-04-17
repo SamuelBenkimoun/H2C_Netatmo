@@ -1,5 +1,4 @@
 library(lidR)
-#library(plotly)
 library(terra)
 library(sf)
 
@@ -29,7 +28,8 @@ terra::writeRaster(dtm_hillshade, filename = "./Outputs/dtm_shade_Paris13.tif")
 plot(dtm_hillshade, col = gray(0:50/50), legend = TRUE)
 
 # Normalizing the heights, based on the terrain 
-opt_output_files(ctg) <-  paste0(tempdir(), "/{*}_norm") # providing an output filepath template
+opt_output_files(ctg) <- paste0(tempdir(), "/{*}_norm")
+#opt_output_files(ctg) <-  "./Outputs/Heights_Normalized/normalized_{XLEFT}_{YBOTTOM}" # providing an output filepath to store it
 ctg_norm <- normalize_height(ctg, dtm) 
 #ctg_norm2 <- normalize_height(ctg, tin()) # or normalizing using the points cloud
 opt_select(ctg_norm) <- "xyzci" # selecting only the coordinates (xyz) + class and intensity attributes to make the object lighter
@@ -60,8 +60,6 @@ st_write(ttops_sf, "./Outputs/treetops_hmin1.gpkg")
 # Voxel plot
 vox <- voxelize_points(ctg_norm, 6)
 vox <- readLAS(vox)
-plot(las_merged, voxel = TRUE, bg = "white")
-
 
 
 ## FILTERING THE VEGETATION CLASSES AND COMPUTING THE DENSITY
@@ -90,11 +88,13 @@ rm(las_list)
 
 # Producing a 2d density plot of the vegetation classes density
 writeLAS(las_merged, "./Outputs/veg_filtered_merged.laz")
+zstation = 30 #height of the station in case some vertical filtering is needed
+#las_height = filter_poi(las_merged, Z >= zstation - 30, Z <= zstation + 30) #still in case of vertical filtering
 grid_veg <- las_merged %>% grid_density(10)
 plot(grid_veg)
+terra::writeRaster(grid_veg, filename = "./Outputs/veg_density_Paris13.tif")
 
-
-## ALTERNATIVE attempt
+## ALTERNATIVE attempt to filter the vegetation
 # ctg_veg <- ctg_norm
 # opt_filter(ctg_veg) <- "-keep_class 3 4 8"
 # opt_output_files(ctg_veg) <- paste0(tempdir(), "/{*}_filtered_veg_alt")
@@ -109,36 +109,31 @@ plot(grid_veg)
 # plot(grid_veg_alt)
 
 ## Applying the same approach for built-up, and water-bodies
-filter_class_build <- function(chunk) { 
-  las <- readLAS(chunk)
-  if (npoints(las) == 0) return(NULL)  
-  
-  las <- filter_poi(las, Classification == 6)
-  return(las)
-  
-  bbox <- bbox(chunk)
-  output <- remove_buffer(output, bbox)
-  return(output)
-}
-filter_class_water <- function(chunk) { 
-  las <- readLAS(chunk)
-  if (npoints(las) == 0) return(NULL)  
-  
-  las <- filter_poi(las, Classification == 9)
-  return(las)
-  
-  bbox <- bbox(chunk)
-  output <- remove_buffer(output, bbox)
-  return(output)
-}
-
-ctg_build <- catalog_apply(ctg_norm, filter_class_build)
-ctg_water <- catalog_apply(ctg_norm, filter_class_water)
-
-
-# FILTERING BY HEIGHT ?
-
-
+# filter_class_built <- function(chunk) { 
+#   las <- readLAS(chunk)
+#   if (npoints(las) == 0) return(NULL)  
+#   
+#   las <- filter_poi(las, Classification == 6)
+#   return(las)
+#   
+#   bbox <- bbox(chunk)
+#   output <- remove_buffer(output, bbox)
+#   return(output)
+# }
+# filter_class_water <- function(chunk) { 
+#   las <- readLAS(chunk)
+#   if (npoints(las) == 0) return(NULL)  
+#   
+#   las <- filter_poi(las, Classification == 9)
+#   return(las)
+#   
+#   bbox <- bbox(chunk)
+#   output <- remove_buffer(output, bbox)
+#   return(output)
+# }
+# 
+# ctg_build <- catalog_apply(ctg_norm, filter_class_build)
+# ctg_water <- catalog_apply(ctg_norm, filter_class_water)
 
 
 
