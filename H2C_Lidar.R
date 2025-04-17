@@ -89,7 +89,7 @@ rm(las_list)
 # Producing a 2d density plot of the vegetation classes density
 writeLAS(las_merged, "./Outputs/veg_filtered_merged.laz")
 zstation = 30 #height of the station in case some vertical filtering is needed
-#las_height = filter_poi(las_merged, Z >= zstation - 30, Z <= zstation + 30) #still in case of vertical filtering
+#las_merged = filter_poi(las_merged, Z >= zstation - 30, Z <= zstation + 30) #still in case of vertical filtering
 grid_veg <- las_merged %>% grid_density(10)
 plot(grid_veg)
 terra::writeRaster(grid_veg, filename = "./Outputs/veg_density_Paris13.tif")
