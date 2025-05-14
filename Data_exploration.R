@@ -4,11 +4,11 @@ library(ggplot2)
 library(leaflet)
 library(lubridate)
 
-# Loading the files -
+# Loading the files
 ##netatmo22 <- open_dataset("./H2C/Data/Netatmo_ini/JJA22.parquet") #To avoid loading the whole file
-netatmo22 <- read_parquet("../H2C/Data/Netatmo_ini/JJA22.parquet")
-netatmo23 <- read_parquet("../H2C/Data/Netatmo_ini/JJA23.parquet")
-netatmo24 <- read_parquet("../H2C/Data/Netatmo_ini/JJA24.parquet")
+netatmo22 <- read_parquet("./H2C/Data/Netatmo_ini/JJA22.parquet")
+netatmo23 <- read_parquet("./H2C/Data/Netatmo_ini/JJA23.parquet")
+netatmo24 <- read_parquet("./H2C/Data/Netatmo_ini/JJA24.parquet")
 
 # Creating a function to format time columns of each dataset.
 time_format <- function(df, datetime_column) {
@@ -164,6 +164,7 @@ filtering_outliers <- function(df, field) {
   return(df_filtered)
 }
 selected_ts <- filtering_outliers(selected_ts, "temperature") 
+sf::st_write(selected_ts, "./Outputs/selected_stations.gpkg")
 
 # Mapping the selected date
 leaflet(selected_ts) %>%
