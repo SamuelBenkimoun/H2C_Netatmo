@@ -1,11 +1,11 @@
 // Setting the boundaries of the region of interest
 var polygon = ee.Geometry.Polygon(
   [[
-    [2.328717645633982, 48.81328561163421],  
-    [2.39369147681074, 48.81328561163421],  
-    [2.39369147681074, 48.835549858691415], 
-    [2.328717645633982, 48.835549858691415], // Vertex 4
-    [2.328717645633982, 48.81328561163421]   // Closing the polygon
+    [0.9600256058726764,48.22193326486002],  
+    [4.179019746497676,48.22193326486002],  
+    [4.179019746497676,49.60092572450123], 
+    [0.9600256058726764,49.60092572450123], // Vertex 4
+    [0.9600256058726764,48.22193326486002]   // Closing the polygon
   ]]
 );
 // Select the image from the collection and filter it by date
@@ -38,9 +38,9 @@ clippedNdvi.evaluate(function(images) {
     // Export the image
     Export.image.toDrive({
       image: img,  
-      description: 'Clipped_NDVI_Paris_13_'+ imageDate,  // name of the output file
+      description: 'MODIS_NDVI_IDF_250_'+ imageDate,  // name of the output file
       folder: 'GEE_Exports',  // folder on Google Drive
-      fileNamePrefix: 'clipped_ndvi_'+ imageDate,  
+      fileNamePrefix: 'MODIS_NDVI_IDF_250_'+ imageDate,  
       region: polygon,  // region for clipping (optionnal here ?)
       scale: 250,  // resolution in meters
       crs: 'EPSG:4326',  
@@ -51,11 +51,10 @@ clippedNdvi.evaluate(function(images) {
 
 // Exporting a single image
 //Export.image.toDrive({
-//  image: clippedNdvi,  // The image to export
-//  description: 'Clipped_NDVI_Paris13',  // A name for the exported file
-//  folder: 'GEE_Exports',  // (Optional) Folder in your Google Drive
-//  fileNamePrefix: 'clipped_ndvi',  // (Optional) Prefix for the filename
-//  //region: polygon,  // region to export (clipping based on the polygon)
+//   description: 'MODIS_NDVI_IDF_250_'+ imageDate,  // name of the output file
+//  folder: 'GEE_Exports',  // folder on Google Drive
+//  fileNamePrefix: 'MODIS_NDVI_IDF_250_'+ imageDate,  
+//  region: polygon,  // region for clipping (optionnal here ?)
 //  scale: 250,  // pixel resolution (in meters)
 //  crs: 'EPSG:4326',  
 //  maxPixels: 1e8  // Max number of pixels to export
@@ -67,13 +66,14 @@ clippedNdvi.evaluate(function(images) {
 // Setting the boundaries of the region of interest
 var polygon = ee.Geometry.Polygon(
   [[
-    [2.328717645633982, 48.81328561163421],  
-    [2.39369147681074, 48.81328561163421],  
-    [2.39369147681074, 48.835549858691415], 
-    [2.328717645633982, 48.835549858691415], // Vertex 4
-    [2.328717645633982, 48.81328561163421]   // Closing the polygon
+    [0.9600256058726764,48.22193326486002],  
+    [4.179019746497676,48.22193326486002],  
+    [4.179019746497676,49.60092572450123], 
+    [0.9600256058726764,49.60092572450123], // Vertex 4
+    [0.9600256058726764,48.22193326486002]   // Closing the polygon
   ]]
 );
+
 // Select the image from the collection and filter it by date
 var dataset = ee.ImageCollection('LANDSAT/COMPOSITES/C02/T1_L2_8DAY_NDVI')
                   .filter(ee.Filter.date('2022-05-15', '2024-10-01'));
@@ -105,9 +105,9 @@ clippedNdvi.evaluate(function(images) {
     // Export the image
     Export.image.toDrive({
       image: img,  
-      description: 'Clipped_NDVI_Paris_13_Landsat'+ imageDate,  // name of the output file
+      description: 'LANDSAT_NDVI_IDF_30_'+ imageDate,  // name of the output file
       folder: 'GEE_Exports',  // folder on Google Drive
-      fileNamePrefix: 'clipped_ndvi_Landsat'+ imageDate,  
+      fileNamePrefix: 'LANDSAT_NDVI_IDF_30_'+ imageDate, 
       region: polygon,  // region for clipping (optionnal here ?)
       scale: 30,  // resolution in meters
       crs: 'EPSG:4326',  
