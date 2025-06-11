@@ -115,3 +115,35 @@ clippedNdvi.evaluate(function(images) {
     });
   });
 });
+
+// OBTAINING THE RGE Alti AT 5M RESOLUTION
+// Load the RGE Alti 5m dataset
+var rge_alti5 = ee.Image("projects/sat-io/open-datasets/IGN_RGE_Alti_5m");
+
+// Define bounding box around Paris region
+var bbox = ee.Geometry.Polygon([
+  [
+    [1.495868998215708, 48.16770955224539],
+    [3.484394388840708, 48.16770955224539],
+    [3.484394388840708, 49.26222436212999],
+    [1.495868998215708, 49.26222436212999],
+    [1.495868998215708, 48.16770955224539]
+  ]
+]);
+
+// Clip the image to the bbox
+var clipped_rge = rge_alti5.clip(bbox);
+
+// Center map display
+Map.centerObject(bbox, 8);
+Map.addLayer(clipped_rge, {}, 'RGE Alti 5m clipped');
+
+// Export as GeoTIFF
+Export.image.toDrive({
+  image: clipped_rge,
+  description: 'RGE_Alti5m_Clipped',
+  scale: 5,
+  region: bbox,
+  crs: 'EPSG:4326',
+  maxPixels: 1e13
+});
